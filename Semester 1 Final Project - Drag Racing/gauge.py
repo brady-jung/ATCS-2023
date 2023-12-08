@@ -8,6 +8,9 @@ WIDTH, HEIGHT = 600, 800
 FPS = 60
 WHITE = (255, 255, 255)
 RED = (255, 0, 0)
+GREEN = (0, 255, 0)
+BLACK = (0, 0, 0)
+ORANGE = (255, 165, 0)
 
 
 class Gauge(pygame.sprite.Sprite):
@@ -19,7 +22,21 @@ class Gauge(pygame.sprite.Sprite):
         self.rect.center = (WIDTH // 2, 1000)  # Adjusted position
         self.speed = 0
         self.mark_length = 10
+        self.needle_length = self.radius - 10  # Adjust needle length
+        self.needle_color = RED
+        self.border_color = WHITE
+        self.border_width = 3
+        self.green_slice_angle = 70
+        self.red_slice_angle = 85
+        self.orange_slice_angle = 100
+    
         
+    def increase_speed(self):
+        self.speed += 0.1
+    
+    def decrease_speed(self):
+        if self.speed > 0:
+            self.speed -= 0.1
 
     def update(self):
         self.rect.y += self.speed
@@ -37,3 +54,37 @@ class Gauge(pygame.sprite.Sprite):
             y = int(self.radius * math.sin(angle))
             pygame.draw.line(self.image, WHITE, (self.radius, self.radius), (self.radius + x, self.radius - y), 2)
             pygame.draw.line(self.image, WHITE, (self.radius, self.radius), (self.radius - x, self.radius - y), 2)
+    
+    def draw_needle(self):
+        angle = math.radians(180 - self.speed * 25 * 1.8)  # Convert speed to angle
+        x = int(self.needle_length * math.cos(angle))
+        y = int(self.needle_length * math.sin(angle))
+        pygame.draw.line(self.image, self.needle_color, (self.radius, self.radius), (self.radius + x, self.radius - y), 3)
+
+    def draw_border(self):
+        pygame.draw.circle(self.image, self.border_color, (self.radius, self.radius), self.radius, self.border_width)
+    
+    def draw_green_slice(self):
+        start_angle = math.radians(180 - self.green_slice_angle * 1.8)
+        end_angle = math.radians(180)
+        pygame.draw.arc(self.image, GREEN, self.image.get_rect(), start_angle, end_angle, self.border_width)
+
+    def draw_orange_slice(self):
+        start_angle = math.radians(180 - self.orange_slice_angle * 1.8)
+        end_angle = math.radians(180)
+        pygame.draw.arc(self.image, ORANGE, self.image.get_rect(), start_angle, end_angle, self.border_width)
+
+    def draw_red_slice(self):
+        start_angle = math.radians(180 - self.red_slice_angle * 1.8)
+        end_angle = math.radians(180)
+        pygame.draw.arc(self.image, RED, self.image.get_rect(), start_angle, end_angle, self.border_width)
+
+    def draw_circle(self):
+        pygame.draw.circle(self.image, BLACK, (self.radius, self.radius), self.radius)
+
+    def draw_gauge(self):
+        self.draw_speed_marks()
+        self.draw_border()
+        self.draw_orange_slice()
+        self.draw_red_slice()
+        self.draw_green_slice()

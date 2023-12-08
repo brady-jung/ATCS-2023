@@ -15,22 +15,26 @@ RED = (255, 0, 0)
 
 # Classes
 class Player(pygame.sprite.Sprite):
-    def __init__(self, color, start_position):
+    def __init__(self, color, start_position, gauge_speed):
         super().__init__()
         self.image = pygame.Surface((25, 50))
         self.image.fill(color)
         self.rect = self.image.get_rect()
+        self.x = 0
+        self.y = 0
+        self.start_position = (self.x, self.y)
         self.rect.center = start_position
-        self.speed = 0
+        self.gauge_speed = gauge_speed
 
     def update(self):
-        self.rect.y += self.speed
+        self.rect.y -= self.gauge_speed
 
         # Ensure the player stays within the screen boundaries
         if self.rect.top < 0:
             self.rect.top = 0
         elif self.rect.bottom > HEIGHT:
             self.rect.bottom = HEIGHT
+        
 
 
 
