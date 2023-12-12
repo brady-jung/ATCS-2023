@@ -5,6 +5,7 @@ import random
 
 from gauge import Gauge
 from player import Player
+from cpu import CPU
 # Initialize Pygame
 pygame.init()
 
@@ -30,7 +31,7 @@ class Game(pygame.sprite.Sprite):
         self.all_sprites = pygame.sprite.Group()
         self.gauge = Gauge()
         self.player1 = Player(RED, (WIDTH // 4, HEIGHT // 1.3), (self.gauge.speed))
-        self.player2 = Player(BLUE, (3 * WIDTH // 4, HEIGHT // 1.3), 0)
+        self.player2 = CPU(BLUE, (3 * WIDTH // 4, HEIGHT // 1.3))
         self.added_speed = 0
         self.all_sprites.add(self.player1, self.player2, self.gauge)
         self.lose_speed = False
@@ -75,7 +76,7 @@ class Game(pygame.sprite.Sprite):
             if self.player1.gauge_speed > 0:
                 self.player1.gauge_speed = self.gauge.speed
 
-            self.player2.gauge_speed = 0
+            self.player2.gauge_speed = 1
            
             
 
