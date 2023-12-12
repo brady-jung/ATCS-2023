@@ -1,7 +1,7 @@
 import pygame
 import sys
 import random
-
+import time
 
 from gauge import Gauge
 from player import Player
@@ -15,6 +15,9 @@ WHITE = (255, 255, 255)
 RED = (255, 0, 0)
 BLUE = (0, 255, 0)
 BLACK = (0, 0, 0)
+GREEN = (0, 0, 255)
+ORANGE = (255, 165, 0)
+YELLOW = (255, 255, 0)
 
 
 class Game(pygame.sprite.Sprite):
@@ -22,13 +25,23 @@ class Game(pygame.sprite.Sprite):
         super().__init__()
 
         # Initialize the game window
-        self.screen = pygame.display.set_mode((WIDTH, HEIGHT))
+        self.screen = pygame.display.set_mode((WIDTH, HEIGHT)) 
         pygame.display.set_caption("Drag Racing Game")
-
+        self.font = pygame.font.Font('freesansbold.ttf', 32)
+        self.text1 = self.font.render('Player 1 Wins!', True, RED, BLACK)
+        self.text2 = self.font.render('Player 2 Wins!', True, GREEN, BLACK)
+        self.start3 = self.font.render('3', True, BLACK, RED)
+        self.start2 = self.font.render('2', True, BLACK, ORANGE)
+        self.start1 = self.font.render('1', True, BLACK, YELLOW)
+        self.startgo = self.font.render('GO!', True, BLUE, GREEN)
+        self.sextRect = self.text1.get_rect()
+        self.textRect = (WIDTH // 2 - 100, HEIGHT // 2)
+        self.textRect2 = (WIDTH // 2, HEIGHT // 2)
+        self.display_surface = pygame.display.set_mode((WIDTH, HEIGHT))
         self.speed = 0
         self.clock = pygame.time.Clock()
         # Create sprites
-        self.all_sprites = pygame.sprite.Group()
+        self.all_sprites = pygame.sprite.Group() 
         self.gauge = Gauge()
         self.player1 = Player(RED, (WIDTH // 4, HEIGHT // 1.3), (self.gauge.speed))
         self.player2 = CPU(BLUE, (3 * WIDTH // 4, HEIGHT // 1.3))
@@ -40,11 +53,29 @@ class Game(pygame.sprite.Sprite):
 
     def get_speed(self):
         return self.added_speed
-
+    
+    def check_win(self, player):
+        if player.rect.top == 0:
+            return True
+        
+    def start_game(self):
+        self.display_surface.blit(self.start3, self.textRect2)
+        pygame.display.update()
+        time.sleep(1)
+        self.display_surface.blit(self.start2, self.textRect2)
+        pygame.display.update()
+        time.sleep(1)
+        self.display_surface.blit(self.start1, self.textRect2)  
+        pygame.display.update()
+        time.sleep(1)
+        self.display_surface.blit(self.startgo, self.textRect2)
+        pygame.display.update()
+        
 
     # Game loop
     def run(self):
         running = True
+        self.start_game()
         while running:
             print(self.gauge.speed)
             self.dt += self.clock.tick(120)
@@ -83,6 +114,20 @@ class Game(pygame.sprite.Sprite):
             # Update
             self.all_sprites.update()
 
+            if self.check_win(self.player1) == True:
+                print("Player 1 Wins!")
+                self.display_surface.blit(self.text1, self.textRect)
+                pygame.display.update()
+                time.sleep(3)
+                return
+            if self.check_win(self.player2) == True:
+                print("Player 2 Wins!")
+                self.display_surface.blit(self.text2, self.textRect)
+                pygame.display.update()
+                time.sleep(3)
+                return
+            
+
             # Draw
             self.screen.fill((0, 0, 0))
 
@@ -93,6 +138,8 @@ class Game(pygame.sprite.Sprite):
             self.gauge.draw_gauge()
             pygame.display.flip()
             self.gauge.draw_needle()
+
+
 
             
 
