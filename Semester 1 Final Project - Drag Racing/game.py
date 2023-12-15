@@ -6,6 +6,7 @@ import time
 from gauge import Gauge
 from player import Player
 from cpu import CPU
+from fsm import FSM
 # Initialize Pygame
 pygame.init()
 
@@ -18,6 +19,8 @@ BLACK = (0, 0, 0)
 GREEN = (0, 0, 255)
 ORANGE = (255, 165, 0)
 YELLOW = (255, 255, 0)
+accelerating = 0
+decelerating = 1
 
 
 class Game(pygame.sprite.Sprite):
@@ -50,6 +53,13 @@ class Game(pygame.sprite.Sprite):
         self.lose_speed = False
         self.gain_speed = True
         self.dt = 0
+        self.fsm = FSM(accelerating)
+        self.test = "test"
+        self.test1 = "test1"
+        self.init_fsm()
+        self.state = accelerating
+        self.accelerate()
+        pygame.display.flip()
 
     def get_speed(self):
         return self.added_speed
@@ -71,13 +81,26 @@ class Game(pygame.sprite.Sprite):
         self.display_surface.blit(self.startgo, self.textRect2)
         pygame.display.update()
         
+    def init_fsm(self):
+        self.fsm.add_transition("test", accelerating , self.decelerate, decelerating)
+        self.fsm.add_transition("test3", accelerating , self.accelerate, accelerating)
+        self.fsm.add_transition("test3", decelerating , self.decelerate, decelerating)
+        self.fsm.add_transition("test1", decelerating , self.accelerate, accelerating)
+
+    def accelerate(self):
+         
+         self.speed += 0.5
+
+    def decelerate(self):
+         self.speed -= 0.25
+
 
     # Game loop
     def run(self):
         running = True
         self.start_game()
         while running:
-            print(self.gauge.speed)
+            # print(self.gauge.speed)
             self.dt += self.clock.tick(120)
 
             for event in pygame.event.get():
@@ -100,7 +123,7 @@ class Game(pygame.sprite.Sprite):
                 else:
                     self.gauge.decrease_speed()
                     self.lose_speed = False
-
+  
                 self.player1.gauge_speed = self.gauge.speed
                 self.dt = 0
 
@@ -109,8 +132,29 @@ class Game(pygame.sprite.Sprite):
 
             self.player2.gauge_speed = 1
            
-            
+            if self.speed >= 3:
+                print("1", self.speed)
+                self.fsm.process(self.test)
+                # pygame.display.flip()
+            elif self.speed <= 0:
+                print("2", self.speed)
+                self.fsm.process(self.test1)
+                # pygame.display.flip()
+            else:
+                self.fsm.process("test3")
+            self.player2.rect.y -= self.speed
+            # print(self.speed)
 
+
+            if self.player1.rect.top < 0:
+                self.player1.rect.top = 0
+            elif self.player1.rect.bottom > HEIGHT:
+                self.player1.rect.bottom = HEIGHT
+            if self.player2.rect.top < 0:
+                self.player2.rect.top = 0
+            elif self.player2.rect.bottom > HEIGHT:
+                self.player2.rect.bottom = HEIGHT
+        
             # Update
             self.all_sprites.update()
 
@@ -126,6 +170,7 @@ class Game(pygame.sprite.Sprite):
                 pygame.display.update()
                 time.sleep(3)
                 return
+            
             
 
             # Draw

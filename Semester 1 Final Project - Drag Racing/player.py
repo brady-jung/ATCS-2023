@@ -17,7 +17,8 @@ RED = (255, 0, 0)
 class Player(pygame.sprite.Sprite):
     def __init__(self, color, start_position, gauge_speed):
         super().__init__()
-        self.image = pygame.Surface((25, 50))
+        #self.image = pygame.Surface((25, 50))
+        self.image = pygame.image.load("purplecar.png")
         self.image.fill(color)
         self.rect = self.image.get_rect()
         self.x = 0
