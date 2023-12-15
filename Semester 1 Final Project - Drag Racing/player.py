@@ -15,11 +15,11 @@ RED = (255, 0, 0)
 
 # Classes
 class Player(pygame.sprite.Sprite):
+    #initialize the players properties (their car), ChatGPT assisted
     def __init__(self, color, start_position, gauge_speed):
         super().__init__()
         #self.image = pygame.Surface((25, 50))
         self.image = pygame.image.load("purplecar.png")
-        self.image.fill(color)
         self.rect = self.image.get_rect()
         self.x = 0
         self.y = 0
@@ -28,6 +28,7 @@ class Player(pygame.sprite.Sprite):
         self.gauge_speed = gauge_speed
 
     def update(self):
+        #updates the car depending on speed, ChatGPT assisted
         self.rect.y -= self.gauge_speed
 
         # Ensure the player stays within the screen boundaries

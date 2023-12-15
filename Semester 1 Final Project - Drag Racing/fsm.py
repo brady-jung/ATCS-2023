@@ -1,3 +1,4 @@
+#This is from our FSM traffic light lab, Ms. Namasivayam said it was universal for FSM machines. This class was made by Ms. Namasivayam, I want to give credit to her. 
 """
 This module implements a Finite State Machine (FSM).
 

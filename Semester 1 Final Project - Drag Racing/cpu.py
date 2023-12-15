@@ -15,10 +15,10 @@ decelerating = 1
 pygame.init()
 
 class CPU(pygame.sprite.Sprite):
+    #initialize the CPU's properties (the car), ChatGPT assisted
     def __init__(self, color, start_position):
             super().__init__()
-            self.image = pygame.Surface((25, 50))
-            self.image.fill(color)
+            self.image = pygame.image.load("redcar.png")
             self.rect = self.image.get_rect()
             self.x = 0
             self.y = 0

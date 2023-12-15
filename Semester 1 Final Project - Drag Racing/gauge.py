@@ -14,6 +14,7 @@ ORANGE = (255, 165, 0)
 
 
 class Gauge(pygame.sprite.Sprite):
+    #initialize gauge, used to show the users speed, ChatGPT assisted
     def __init__(self):
         super().__init__() 
         self.radius = 60
@@ -30,14 +31,16 @@ class Gauge(pygame.sprite.Sprite):
         self.red_slice_angle = 85
         self.orange_slice_angle = 100
     
-        
+    #increases speed    
     def increase_speed(self):
         self.speed += 0.1
     
+    #decreases speed
     def decrease_speed(self):
         if self.speed > 0:
             self.speed -= 0.1
 
+    #updates the gauge with the needle at a different position based on speed
     def update(self):
         self.rect.y += self.speed
 
